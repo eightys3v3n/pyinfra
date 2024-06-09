@@ -124,6 +124,8 @@ if __name__ == "__main__":
                 "mech = pyinfra.connectors.mech",
                 "ssh = pyinfra.connectors.ssh",
                 "dockerssh = pyinfra.connectors.dockerssh",
+                "knockssh = pyinfra.connectors.knockssh",
+                # Inventory only connectors
                 "vagrant = pyinfra.connectors.vagrant",
                 "winrm = pyinfra.connectors.winrm",
                 "terraform = pyinfra.connectors.terraform",
