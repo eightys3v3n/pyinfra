@@ -50,7 +50,7 @@ class ConfigDefaults:
     # Only show errors but don't count as failure
     IGNORE_ERRORS: bool = False
     # Shell to use to execute commands
-    SHELL: str = "sh"
+    SHELL: str = "bash"
 
 
 config_defaults = {key: value for key, value in ConfigDefaults.__dict__.items() if key.isupper()}

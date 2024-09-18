@@ -294,7 +294,7 @@ def make_unix_command(
     command: StringCommand,
     _env=None,
     _chdir=None,
-    _shell_executable="sh",
+    _shell_executable="bash",
     # Su config
     _su_user=None,
     _use_su_login=False,
@@ -316,7 +316,7 @@ def make_unix_command(
     """
 
     if _shell_executable is not None and not isinstance(_shell_executable, str):
-        _shell_executable = "sh"
+        _shell_executable = "bash"
 
     if _env:
         env_string = " ".join(['"{0}={1}"'.format(key, value) for key, value in _env.items()])
