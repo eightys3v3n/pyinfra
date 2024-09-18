@@ -30,24 +30,32 @@ def build_connectors_docs():
             lines.append(doc)
             lines.append("")
 
-        data_title = "Usage"
-        lines.append(data_title)
-        lines.append(title_line("~", data_title))
-        lines.append("")
-
-        names_argument_key = getfullargspec(connector.make_names_data).args[0]
-        if names_argument_key == "_":
-            names_argument_key = ""
+        examples_doc = getattr(connector, "__examples_doc__", None)
+        if examples_doc:
+            lines.append("Examples")
+            lines.append(title_line("~", "Examples"))
+            lines.append("")
+            lines.append(cleandoc(examples_doc))
+            lines.append("")
         else:
-            names_argument_key = f"/{names_argument_key}"
-        lines.append(
-            f"""
-.. code:: shell
+            data_title = "Usage"
+            lines.append(data_title)
+            lines.append(title_line("~", data_title))
+            lines.append("")
 
-    pyinfra @{connector_name}{names_argument_key} ...
-""".strip(),
-        )
-        lines.append("")
+            names_argument_key = getfullargspec(connector.make_names_data).args[0]
+            if names_argument_key == "_":
+                names_argument_key = ""
+            else:
+                names_argument_key = f"/{names_argument_key}"
+            lines.append(
+                f"""
+    .. code:: shell
+
+        pyinfra @{connector_name}{names_argument_key} ...
+    """.strip(),
+            )
+            lines.append("")
 
         data_key_lines = []
 
@@ -89,13 +97,6 @@ def build_connectors_docs():
     """.strip(),
             )
             lines.append("")
-
-        examples_doc = getattr(connector, "__examples_doc__", None)
-        if examples_doc:
-            lines.append("Examples")
-            lines.append(title_line("~", "Examples"))
-            lines.append("")
-            lines.append(cleandoc(examples_doc))
 
         module_filename = path.join(docs_dir, "connectors", f"{connector_name}.rst")
         print("--> Writing {0}".format(module_filename))

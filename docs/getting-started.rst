@@ -5,7 +5,7 @@ This guide should help describe the basics of deploying stuff with pyinfra. Star
 
 .. code:: bash
 
-    pip install pyinfra --pre
+    pip install pyinfra
 
 To do something with pyinfra you need two things:
 

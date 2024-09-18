@@ -5,32 +5,29 @@ import re
 from pyinfra.api.facts import FactBase
 
 
-class GitBranch(FactBase):
-    requires_command = "git"
+class GitFactBase(FactBase):
+    def requires_command(self, *args, **kwargs) -> str:
+        return "git"
 
-    @staticmethod
-    def command(repo):
+
+class GitBranch(GitFactBase):
+    def command(self, repo) -> str:
         return "! test -d {0} || (cd {0} && git describe --all)".format(repo)
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         return re.sub(r"(heads|tags)/", r"", "\n".join(output))
 
 
-class GitConfig(FactBase):
+class GitConfig(GitFactBase):
     default = dict
 
-    requires_command = "git"
-
-    @staticmethod
-    def command(repo=None):
+    def command(self, repo=None) -> str:
         if repo is None:
             return "git config --global -l || true"
 
         return "! test -d {0} || (cd {0} && git config --local -l)".format(repo)
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         items: dict[str, list[str]] = {}
 
         for line in output:
@@ -40,19 +37,15 @@ class GitConfig(FactBase):
         return items
 
 
-class GitTrackingBranch(FactBase):
-    requires_command = "git"
-
-    @staticmethod
-    def command(repo):
+class GitTrackingBranch(GitFactBase):
+    def command(self, repo) -> str:
         return r"! test -d {0} || (cd {0} && git status --branch --porcelain)".format(repo)
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         if not output:
             return None
 
-        m = re.search(r"\.{3}(\S+)\b", output[0])
+        m = re.search(r"\.{3}(\S+)\b", list(output)[0])
         if m:
             return m.group(1)
         return None

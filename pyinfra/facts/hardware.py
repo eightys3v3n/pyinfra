@@ -5,17 +5,17 @@ import re
 from pyinfra.api import FactBase, ShortFactBase
 
 
-class Cpus(FactBase):
+class Cpus(FactBase[int]):
     """
     Returns the number of CPUs on this server.
     """
 
-    command = "getconf NPROCESSORS_ONLN 2> /dev/null || getconf _NPROCESSORS_ONLN"
+    def command(self) -> str:
+        return "getconf NPROCESSORS_ONLN 2> /dev/null || getconf _NPROCESSORS_ONLN"
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         try:
-            return int(output[0])
+            return int(list(output)[0])
         except ValueError:
             pass
 
@@ -25,11 +25,13 @@ class Memory(FactBase):
     Returns the memory installed in this server, in MB.
     """
 
-    command = "vmstat -s"
-    requires_command = "vmstat"
+    def requires_command(self) -> str:
+        return "vmstat"
 
-    @staticmethod
-    def process(output):
+    def command(self) -> str:
+        return "vmstat -s"
+
+    def process(self, output):
         data = {}
 
         for line in output:
@@ -75,9 +77,11 @@ class BlockDevices(FactBase):
         }
     """
 
-    command = "df"
     regex = r"([a-zA-Z0-9\/\-_]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]{1,3})%\s+([a-zA-Z\/0-9\-_]+)"  # noqa: E501
     default = dict
+
+    def command(self) -> str:
+        return "df"
 
     def process(self, output):
         devices = {}
@@ -105,6 +109,7 @@ class NetworkDevices(FactBase):
     ``ipv6_addresses`` facts for easier-to-use shortcuts to get device addresses.
 
     .. code:: python
+
         "enp1s0": {
             "ether": "12:34:56:78:9A:BC",
             "mtu": 1500,
@@ -170,8 +175,10 @@ class NetworkDevices(FactBase):
         }
     """
 
-    command = "ip addr show 2> /dev/null || ifconfig -a"
     default = dict
+
+    def command(self) -> str:
+        return "ip addr show 2> /dev/null || ifconfig -a"
 
     # Definition of valid interface names for Linux:
     # https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/net/core/dev.c?h=v5.1.3#n1020

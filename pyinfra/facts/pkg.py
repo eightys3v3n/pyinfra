@@ -16,9 +16,11 @@ class PkgPackages(FactBase):
         }
     """
 
-    command = "pkg info || pkg_info || true"
     regex = r"^([a-zA-Z0-9_\-\+]+)\-([0-9a-z\.]+)"
     default = dict
+
+    def command(self) -> str:
+        return "pkg info || pkg_info || true"
 
     def process(self, output):
         return parse_packages(self.regex, output)

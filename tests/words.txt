@@ -55,6 +55,7 @@ automagically
 automount
 autoname
 autosectionlabel
+autostart
 autouse
 awk
 backport
@@ -193,6 +194,7 @@ initd
 initrd
 intstatus
 ip6tables
+ipam
 ipdb
 iproute2
 iptables
@@ -231,6 +233,7 @@ logonsession
 lsb
 lxd
 macos
+maxsplit
 md5sum
 mech
 memoize
@@ -318,8 +321,11 @@ rol
 rsa
 rst
 rsync
+runit
 runlevel
 runlevels
+runsv
+runsvdir
 s01
 s1
 samefile
@@ -344,10 +350,12 @@ simplefilter
 skipif
 socketserver
 somehost
+sourcedir
 sshkeys
 sshuserclient
 ssl
 status
+statusstr
 stdlib
 stringify
 stringio
@@ -357,9 +365,11 @@ subclassed
 subclassing
 subkey
 submodules
+subnet
 sudo
 sudo'd
 sudoing
+svdir
 switcheroo
 sysctl
 sysctls
@@ -391,6 +401,7 @@ uefi
 ufw
 uname
 unignored
+unmanaged
 unmount
 unresposivehost
 up

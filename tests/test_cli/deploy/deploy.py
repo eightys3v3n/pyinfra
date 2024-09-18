@@ -79,3 +79,9 @@ if host.name == "somehost":
         dest="/a_template",
         is_template=True,
     )
+
+with host.when(lambda: host.name != "somehost"):
+    server.shell(
+        name="Second final limited operation",
+        commands="echo final_limited_op",
+    )

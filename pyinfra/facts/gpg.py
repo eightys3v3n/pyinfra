@@ -8,7 +8,8 @@ from pyinfra.api import FactBase
 class GpgFactBase(FactBase):
     abstract = True
 
-    requires_command = "gpg"
+    def requires_command(self, *args, **kwargs) -> str:
+        return "gpg"
 
     key_record_type = "pub"
     subkey_record_type = "sub"

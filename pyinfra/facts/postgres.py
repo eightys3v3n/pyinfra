@@ -48,7 +48,9 @@ class PostgresFactBase(FactBase):
     abstract = True
 
     psql_command: str
-    requires_command = "psql"
+
+    def requires_command(self, *args, **kwargs):
+        return "psql"
 
     def command(
         self,

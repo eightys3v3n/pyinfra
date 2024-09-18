@@ -16,12 +16,15 @@ class XbpsPackages(FactBase):
         }
     """
 
-    command = "xbps-query -l"
-    requires_command = "xbps-query"
+    def requires_command(self) -> str:
+        return "xbps-query"
 
     default = dict
 
     regex = r"^.. ([a-zA-Z0-9_\-\+]+)\-([0-9a-z_\.]+)"
+
+    def command(self):
+        return "xbps-query -l"
 
     def process(self, output):
         return parse_packages(self.regex, output)

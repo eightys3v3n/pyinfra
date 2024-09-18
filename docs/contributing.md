@@ -2,12 +2,12 @@
 
 🎉 Thank you for taking the time to contribute to pyinfra! 🎉
 
-Third party pull requests help expand pyinfra's functionality and are essential to it's continued growth. This guide should help get you started adding additional operations, facts and other functionality to pyinfra.
+Third party pull requests help expand pyinfra's functionality and are essential to its continued growth. This guide should help get you started adding additional operations, facts and other functionality to pyinfra.
 
 ## Guides
 
 + [How to write operations](api/operations)
-+ [How to write facts](api/facts)
++ [How to write facts](api/operations.md#facts)
 + [How to write connectors](api/connectors)
 + [API reference](api/reference)
 
@@ -23,7 +23,7 @@ Third party pull requests help expand pyinfra's functionality and are essential 
 # python -m venv / pyenv virtualenv / virtualenv
 
 # Clone the repo
-git clone git@github.com:Fizzadar/pyinfra.git
+git clone git@github.com:pyinfra-dev/pyinfra.git
 
 # Install the package in editable mode with development requirements
 cd pyinfra

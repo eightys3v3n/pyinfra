@@ -22,7 +22,8 @@ class User(FactBase):
     Returns the name of the current user.
     """
 
-    command = "echo $USER"
+    def command(self):
+        return "echo $USER"
 
 
 class Home(FactBase[Optional[str]]):
@@ -40,7 +41,8 @@ class Path(FactBase):
     Returns the path environment variable of the current user.
     """
 
-    command = "echo $PATH"
+    def command(self):
+        return "echo $PATH"
 
 
 class TmpDir(FactBase):
@@ -48,7 +50,8 @@ class TmpDir(FactBase):
     Returns the temporary directory of the current server, if configured.
     """
 
-    command = "echo $TMPDIR"
+    def command(self):
+        return "echo $TMPDIR"
 
 
 class Hostname(FactBase):
@@ -56,7 +59,8 @@ class Hostname(FactBase):
     Returns the current hostname of the server.
     """
 
-    command = "uname -n"
+    def command(self):
+        return "uname -n"
 
 
 class Kernel(FactBase):
@@ -64,7 +68,8 @@ class Kernel(FactBase):
     Returns the kernel name according to ``uname``.
     """
 
-    command = "uname -s"
+    def command(self):
+        return "uname -s"
 
 
 class KernelVersion(FactBase):
@@ -72,7 +77,8 @@ class KernelVersion(FactBase):
     Returns the kernel version according to ``uname``.
     """
 
-    command = "uname -r"
+    def command(self):
+        return "uname -r"
 
 
 # Deprecated/renamed -> Kernel
@@ -84,7 +90,8 @@ class Os(FactBase[str]):
         This fact is deprecated/renamed, please use the ``server.Kernel`` fact.
     """
 
-    command = "uname -s"
+    def command(self):
+        return "uname -s"
 
 
 # Deprecated/renamed -> KernelVersion
@@ -96,7 +103,8 @@ class OsVersion(FactBase[str]):
         This fact is deprecated/renamed, please use the ``server.KernelVersion`` fact.
     """
 
-    command = "uname -r"
+    def command(self):
+        return "uname -r"
 
 
 class Arch(FactBase[str]):
@@ -106,7 +114,8 @@ class Arch(FactBase[str]):
 
     # ``uname -p`` is not portable and returns ``unknown`` on Debian.
     # ``uname -m`` works on most Linux and BSD systems.
-    command = "uname -m"
+    def command(self):
+        return "uname -m"
 
 
 class Command(FactBase[str]):
@@ -121,12 +130,12 @@ class Command(FactBase[str]):
 
 class Which(FactBase[Optional[str]]):
     """
-    Returns the path of a given command, if available.
+    Returns the path of a given command according to `command -v`, if available.
     """
 
     @staticmethod
     def command(command):
-        return "which {0} || true".format(command)
+        return "command -v {0} || true".format(command)
 
 
 class Date(FactBase[datetime]):
@@ -134,12 +143,13 @@ class Date(FactBase[datetime]):
     Returns the current datetime on the server.
     """
 
-    command = f"date +'{ISO_DATE_FORMAT}'"
     default = datetime.now
 
-    @staticmethod
-    def process(output) -> datetime:
-        return datetime.strptime(output[0], ISO_DATE_FORMAT)
+    def command(self):
+        return f"date +'{ISO_DATE_FORMAT}'"
+
+    def process(self, output) -> datetime:
+        return datetime.strptime(list(output)[0], ISO_DATE_FORMAT)
 
 
 class MacosVersion(FactBase[str]):
@@ -147,8 +157,11 @@ class MacosVersion(FactBase[str]):
     Returns the installed MacOS version.
     """
 
-    command = "sw_vers -productVersion"
-    requires_command = "sw_vers"
+    def requires_command(self) -> str:
+        return "sw_vers"
+
+    def command(self):
+        return "sw_vers -productVersion"
 
 
 class MountsDict(TypedDict):
@@ -175,11 +188,12 @@ class Mounts(FactBase[Dict[str, MountsDict]]):
         }
     """
 
-    command = "mount"
     default = dict
 
-    @staticmethod
-    def process(output) -> dict[str, MountsDict]:
+    def command(self):
+        return "mount"
+
+    def process(self, output) -> dict[str, MountsDict]:
         devices: dict[str, MountsDict] = {}
 
         for line in output:
@@ -224,11 +238,12 @@ class KernelModules(FactBase):
         }
     """
 
-    command = "! test -f /proc/modules || cat /proc/modules"
+    def command(self):
+        return "! test -f /proc/modules || cat /proc/modules"
+
     default = dict
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         modules = {}
 
         for line in output:
@@ -264,11 +279,13 @@ class LsbRelease(FactBase):
         }
     """
 
-    command = "lsb_release -ca"
-    requires_command = "lsb_release"
+    def command(self):
+        return "lsb_release -ca"
 
-    @staticmethod
-    def process(output):
+    def requires_command(self):
+        return "lsb_release"
+
+    def process(self, output):
         items = {}
 
         for line in output:
@@ -307,14 +324,12 @@ class Sysctl(FactBase):
 
     default = dict
 
-    @staticmethod
-    def command(keys=None):
+    def command(self, keys=None):
         if keys is None:
             return "sysctl -a"
         return f"sysctl {' '.join(keys)}"
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         sysctls = {}
 
         for line in output:
@@ -347,7 +362,9 @@ class Groups(FactBase[List[str]]):
     Returns a list of groups on the system.
     """
 
-    command = "cat /etc/group"
+    def command(self):
+        return "cat /etc/group"
+
     default = list
 
     def process(self, output) -> list[str]:
@@ -392,10 +409,10 @@ class Crontab(FactBase[Dict[str, CrontabDict]]):
 
     default = dict
 
-    requires_command = "crontab"
+    def requires_command(self, user=None) -> str:
+        return "crontab"
 
-    @staticmethod
-    def command(user=None):
+    def command(self, user=None):
         if user:
             return "crontab -l -u {0} || true".format(user)
         return "crontab -l || true"
@@ -455,7 +472,9 @@ class Users(FactBase):
         }
     """
 
-    command = """
+    def command(self):
+        return """
+
         for i in `cat /etc/passwd | cut -d: -f1`; do
             ENTRY=`grep ^$i: /etc/passwd`;
             LASTLOG_RAW=`(lastlog -u $i 2> /dev/null || lastlogin $i 2> /dev/null)`;
@@ -538,11 +557,12 @@ class LinuxDistribution(FactBase[LinuxDistributionDict]):
         }
     """
 
-    command = (
-        "cd /etc/ && for file in $(ls -pdL *-release | grep -v /); "
-        'do echo "/etc/${file}"; cat "/etc/${file}"; echo ---; '
-        "done"
-    )
+    def command(self) -> str:
+        return (
+            "cd /etc/ && for file in $(ls -pdL *-release | grep -v /); "
+            'do echo "/etc/${file}"; cat "/etc/${file}"; echo ---; '
+            "done"
+        )
 
     name_to_pretty_name = {
         "alpine": "Alpine",
@@ -626,8 +646,7 @@ class LinuxName(ShortFactBase[str]):
 
     fact = LinuxDistribution
 
-    @staticmethod
-    def process_data(data):
+    def process_data(self, data) -> str:
         return data["name"]
 
 
@@ -646,8 +665,11 @@ class Selinux(FactBase[SelinuxDict]):
         }
     """
 
-    command = "sestatus"
-    requires_command = "sestatus"
+    def command(self):
+        return "sestatus"
+
+    def requires_command(self) -> str:
+        return "sestatus"
 
     @staticmethod
     def default() -> SelinuxDict:
@@ -673,7 +695,9 @@ class LinuxGui(FactBase[List[str]]):
     Returns a list of available Linux GUIs.
     """
 
-    command = "ls /usr/bin/*session || true"
+    def command(self):
+        return "ls /usr/bin/*session || true"
+
     default = list
 
     known_gui_binaries = {
@@ -702,8 +726,7 @@ class HasGui(ShortFactBase[bool]):
 
     fact = LinuxGui
 
-    @staticmethod
-    def process_data(data) -> bool:
+    def process_data(self, data) -> bool:
         return len(data) > 0
 
 
@@ -716,8 +739,12 @@ class Locales(FactBase[List[str]]):
         ["C.UTF-8", "en_US.UTF-8"]
     """
 
-    command = "locale -a"
-    requires_command = "locale"
+    def command(self) -> str:
+        return "locale -a"
+
+    def requires_command(self) -> str:
+        return "locale"
+
     default = list
 
     def process(self, output) -> list[str]:
@@ -784,7 +811,9 @@ class SecurityLimits(FactBase):
         ]
     """
 
-    command = "cat /etc/security/limits.conf"
+    def command(self):
+        return "cat /etc/security/limits.conf"
+
     default = list
 
     def process(self, output):

@@ -8,8 +8,11 @@ class LaunchdStatus(FactBase):
     Returns a dict of name -> status for launchd managed services.
     """
 
-    command = "launchctl list"
-    requires_command = "launchctl"
+    def command(self) -> str:
+        return "launchctl list"
+
+    def requires_command(self) -> str:
+        return "launchctl"
 
     default = dict
 

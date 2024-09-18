@@ -151,12 +151,6 @@ def _print_support(ctx, param, value):
 )
 # Debug args
 @click.option(
-    "--quiet",
-    is_flag=True,
-    default=False,
-    help="Hide most pyinfra output.",
-)
-@click.option(
     "--debug",
     is_flag=True,
     default=False,
@@ -274,7 +268,6 @@ def _main(
     limit: Iterable,
     no_wait: bool,
     serial: bool,
-    quiet: bool,
     debug: bool,
     debug_all: bool,
     debug_facts: bool,
@@ -297,7 +290,7 @@ def _main(
 
     # Setup state, config & inventory
     #
-    state = _setup_state(verbosity, quiet, yes)
+    state = _setup_state(verbosity, yes)
     config = Config()
     ctx_config.set(config)
 
@@ -368,6 +361,14 @@ def _main(
         else:
             logger.info("--> Detected changes:")
             print_meta(state)
+            click.echo(
+                """
+    Detected changes may not include every change pyinfra will execute.
+    Hidden side effects of operations may alter behaviour of future operations,
+    this will be shown in the results. The remote state will always be updated
+    to reflect the state defined by the input operations.""",
+                err=True,
+            )
 
     # If --debug-facts or --debug-operations, print and exit
     if debug_facts or debug_operations:
@@ -520,7 +521,7 @@ def _set_verbosity(state, verbosity):
     return state
 
 
-def _setup_state(verbosity, quiet, yes):
+def _setup_state(verbosity, yes):
     cwd = getcwd()
     if cwd not in sys.path:  # ensure cwd is present in sys.path
         sys.path.append(cwd)

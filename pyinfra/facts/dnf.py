@@ -23,12 +23,15 @@ class DnfRepositories(FactBase):
         ]
     """
 
-    command = make_cat_files_command(
-        "/etc/dnf.conf",
-        "/etc/dnf.repos.d/*.repo",
-        "/etc/yum.repos.d/*.repo",
-    )
-    requires_command = "dnf"
+    def command(self) -> str:
+        return make_cat_files_command(
+            "/etc/dnf.conf",
+            "/etc/dnf.repos.d/*.repo",
+            "/etc/yum.repos.d/*.repo",
+        )
+
+    def requires_command(self) -> str:
+        return "dnf"
 
     default = list
 

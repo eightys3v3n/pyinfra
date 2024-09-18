@@ -37,18 +37,22 @@ class BrewVersion(FactBase):
 
     """
 
-    command = "brew --version"
-    requires_command = "brew"
+    def command(self) -> str:
+        return "brew --version"
+
+    def requires_command(self) -> str:
+        return "brew"
 
     @staticmethod
     def default():
         return [0, 0, 0]
 
     def process(self, output):
-        m = VERSION_MATCHER.match(output[0])
+        out = list(output)[0]
+        m = VERSION_MATCHER.match(out)
         if m is not None:
             return [int(m.group(key)) for key in ["major", "minor", "patch"]]
-        logger.warning("could not parse version string from brew: %s", output[0])
+        logger.warning("could not parse version string from brew: %s", out)
         return self.default()
 
 
@@ -63,8 +67,11 @@ class BrewPackages(FactBase):
         }
     """
 
-    command = "brew list --versions"
-    requires_command = "brew"
+    def command(self) -> str:
+        return "brew list --versions"
+
+    def requires_command(self) -> str:
+        return "brew"
 
     default = dict
 
@@ -83,11 +90,14 @@ class BrewCasks(BrewPackages):
         }
     """
 
-    command = (
-        r'if brew --version | grep -q -e "Homebrew\ +(1\.|2\.[0-5]).*" 1>/dev/null;'
-        r"then brew cask list --versions; else brew list --cask --versions; fi"
-    )
-    requires_command = "brew"
+    def command(self) -> str:
+        return (
+            r'if brew --version | grep -q -e "Homebrew\ +(1\.|2\.[0-5]).*" 1>/dev/null;'
+            r"then brew cask list --versions; else brew list --cask --versions; fi"
+        )
+
+    def requires_command(self) -> str:
+        return "brew"
 
 
 class BrewTaps(FactBase):
@@ -95,8 +105,11 @@ class BrewTaps(FactBase):
     Returns a list of brew taps.
     """
 
-    command = "brew tap"
-    requires_command = "brew"
+    def command(self) -> str:
+        return "brew tap"
+
+    def requires_command(self) -> str:
+        return "brew"
 
     default = list
 

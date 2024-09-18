@@ -50,6 +50,12 @@ def key(src: str | None = None, keyserver: str | None = None, keyid: str | list[
     keyserver/id:
         These must be provided together.
 
+    .. warning::
+        ``apt-key`` is deprecated in Debian, it is recommended NOT to use this
+        operation and instead follow the instructions here:
+
+        https://wiki.debian.org/DebianRepository/UseThirdParty
+
     **Examples:**
 
     .. code:: python

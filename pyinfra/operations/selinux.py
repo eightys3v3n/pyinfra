@@ -163,7 +163,7 @@ def port(protocol: Protocol | str, port_num: int, se_type: str | None = None, pr
         raise ValueError("se_type must have a valid value if present is set")
 
     new_type = se_type if present else ""
-    direct_get = len(host.get_fact(Which, command=SEPort.requires_command) or "") > 0
+    direct_get = len(host.get_fact(Which, command="sepolicy") or "") > 0
     if direct_get:
         current = host.get_fact(SEPort, protocol=protocol, port=port_num)
     else:

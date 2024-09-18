@@ -23,10 +23,13 @@ class ZypperRepositories(FactBase):
         ]
     """
 
-    command = make_cat_files_command(
-        "/etc/zypp/repos.d/*.repo",
-    )
-    requires_command = "zypper"
+    def command(self) -> str:
+        return make_cat_files_command(
+            "/etc/zypp/repos.d/*.repo",
+        )
+
+    def requires_command(self) -> str:
+        return "zypper"
 
     default = list
 

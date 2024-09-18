@@ -20,13 +20,15 @@ class OpenvzContainers(FactBase):
         }
     """
 
-    command = "vzlist -a -j"
-    requires_command = "vzlist"
+    def command(self) -> str:
+        return "vzlist -a -j"
+
+    def requires_command(self) -> str:
+        return "vzlist"
 
     default = dict
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         combined_json = "".join(output)
         vz_data = json.loads(combined_json)
 

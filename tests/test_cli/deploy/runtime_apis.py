@@ -68,7 +68,7 @@ if second_line_op.changed:
     server.shell(commands=["echo if sees second op"])
 
 # Use the op.did_change context
-with second_line_op.did_change:
+with host.when(second_line_op.did_change):
     # This will be executed if the second line operation made any changes, in
     # this deploy that's never. This will appear as a conditional op in the CLI.
     server.shell(commands=["echo with sees second op"])

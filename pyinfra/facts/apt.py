@@ -9,7 +9,7 @@ from .util import make_cat_files_command
 
 
 def parse_apt_repo(name):
-    regex = r"^(deb(?:-src)?)(?:\s+\[([^\]]+)\])?\s+([^\s]+)\s+([a-z-]+)\s+([a-z-\s]*)$"
+    regex = r"^(deb(?:-src)?)(?:\s+\[([^\]]+)\])?\s+([^\s]+)\s+([^\s]+)\s+([a-z-\s]*)$"
 
     matches = re.match(regex, name)
 
@@ -52,11 +52,14 @@ class AptSources(FactBase):
         ]
     """
 
-    command = make_cat_files_command(
-        "/etc/apt/sources.list",
-        "/etc/apt/sources.list.d/*.list",
-    )
-    requires_command = "apt"  # if apt installed, above should exist
+    def command(self) -> str:
+        return make_cat_files_command(
+            "/etc/apt/sources.list",
+            "/etc/apt/sources.list.d/*.list",
+        )
+
+    def requires_command(self) -> str:
+        return "apt"  # if apt installed, above should exist
 
     default = list
 
@@ -86,5 +89,8 @@ class AptKeys(GpgFactBase):
     """
 
     # This requires both apt-key *and* apt-key itself requires gpg
-    command = "! command -v gpg || apt-key list --with-colons"
-    requires_command = "apt-key"
+    def command(self) -> str:
+        return "! command -v gpg || apt-key list --with-colons"
+
+    def requires_command(self) -> str:
+        return "apt-key"

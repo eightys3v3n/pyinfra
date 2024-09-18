@@ -18,8 +18,11 @@ class GemPackages(FactBase):
         }
     """
 
-    command = "gem list --local"
-    requires_command = "gem"
+    def command(self) -> str:
+        return "gem list --local"
+
+    def requires_command(self) -> str:
+        return "gem"
 
     default = dict
 

@@ -18,7 +18,8 @@ class InitdStatus(FactBase):
         http://refspecs.linuxbase.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
     """
 
-    command = """
+    def command(self) -> str:
+        return """
         for SERVICE in `ls /etc/init.d/`; do
             _=`cat /etc/init.d/$SERVICE | grep "### BEGIN INIT INFO"`
 

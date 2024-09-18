@@ -12,7 +12,7 @@ pytest
 
 echo "# Git tag & push..."
 git tag -a "v$VERSION" -m "v$VERSION"
-git push --tags
+git push --atomic origin "${MAJOR_BRANCH}" "v$VERSION"
 
 echo "Clear existing build/dist..."
 rm -rf build/* dist/*

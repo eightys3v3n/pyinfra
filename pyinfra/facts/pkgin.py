@@ -18,8 +18,11 @@ class PkginPackages(FactBase):
         }
     """
 
-    command = "pkgin list"
-    requires_command = "pkgin"
+    def command(self) -> str:
+        return "pkgin list"
+
+    def requires_command(self) -> str:
+        return "pkgin"
 
     default = dict
 

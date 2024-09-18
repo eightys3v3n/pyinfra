@@ -18,8 +18,11 @@ class ApkPackages(FactBase):
         }
     """
 
-    command = "apk list --installed"
-    requires_command = "apk"
+    def command(self) -> str:
+        return "apk list --installed"
+
+    def requires_command(self) -> str:
+        return "apk"
 
     default = dict
 

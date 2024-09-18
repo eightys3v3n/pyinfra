@@ -9,11 +9,12 @@ class RcdStatus(InitdStatus):
     BSD init scripts are well behaved and as such their output can be trusted.
     """
 
-    command = """
-        for SERVICE in `find /etc/rc.d /usr/local/etc/rc.d -type f`; do
-            $SERVICE status 2> /dev/null || $SERVICE check 2> /dev/null
-            echo "`basename $SERVICE`=$?"
-        done
-    """
+    def command(self) -> str:
+        return """
+            for SERVICE in `find /etc/rc.d /usr/local/etc/rc.d -type f`; do
+                $SERVICE status 2> /dev/null || $SERVICE check 2> /dev/null
+                echo "`basename $SERVICE`=$?"
+            done
+        """
 
     default = dict

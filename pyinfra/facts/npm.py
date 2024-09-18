@@ -21,7 +21,8 @@ class NpmPackages(FactBase):
 
     default = dict
 
-    requires_command = "npm"
+    def requires_command(self, directory=None) -> str:
+        return "npm"
 
     def command(self, directory=None):
         if directory:

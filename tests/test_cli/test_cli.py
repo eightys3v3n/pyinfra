@@ -182,7 +182,6 @@ class TestDirectMainExecution(PatchSSHTestCase):
                 no_wait=False,
                 serial=False,
                 shell_executable=None,
-                quiet=False,
                 data=tuple(),
                 debug=False,
                 debug_facts=False,

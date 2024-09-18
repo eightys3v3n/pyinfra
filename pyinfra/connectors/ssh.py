@@ -122,14 +122,18 @@ class SSHConnector(BaseConnector):
     .. code:: python
 
         hosts = (
-            [
-                "my-host-1.net",
-                "my-host-2.net",
-            ],
-            {
-                "ssh_username": "ssh-user",
-            },
+            ["my-host-1.net", "my-host-2.net"],
+            {"ssh_user": "ssh-user"},
         )
+
+    Multiple hosts with different SSH usernames:
+
+    .. code:: python
+
+        hosts = [
+            ("my-host-1.net", {"ssh_user": "ssh-user"}),
+            ("my-host-2.net", {"ssh_user": "other-user"}),
+        ]
     """
 
     handles_execution = True
@@ -602,7 +606,7 @@ class SSHConnector(BaseConnector):
             rsync_flags=" ".join(flags),
             ssh_flags=" ".join(ssh_flags),
             remote_rsync_command=remote_rsync_command,
-            user=user,
+            user=user or "",
             hostname=hostname,
             src=src,
             dest=dest,

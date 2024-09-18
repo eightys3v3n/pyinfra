@@ -21,7 +21,8 @@ class PacmanUnpackGroup(FactBase):
         ]
     """
 
-    requires_command = "pacman"
+    def requires_command(self, *args, **kwargs) -> str:
+        return "pacman"
 
     default = list
 
@@ -44,8 +45,11 @@ class PacmanPackages(FactBase):
         }
     """
 
-    command = "pacman -Q"
-    requires_command = "pacman"
+    def command(self) -> str:
+        return "pacman -Q"
+
+    def requires_command(self, *args, **kwargs) -> str:
+        return "pacman"
 
     default = dict
 

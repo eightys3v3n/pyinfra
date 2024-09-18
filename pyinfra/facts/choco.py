@@ -18,7 +18,9 @@ class ChocoPackages(FactBase):
         }
     """
 
-    command = "choco list"
+    def command(self) -> str:
+        return "choco list"
+
     shell_executable = "ps"
 
     default = dict
@@ -32,8 +34,8 @@ class ChocoVersion(FactBase):
     Returns the choco (Chocolatey) version.
     """
 
-    command = "choco --version"
+    def command(self) -> str:
+        return "choco --version"
 
-    @staticmethod
-    def process(output):
+    def process(self, output):
         return "".join(output).replace("\n", "")

@@ -236,7 +236,7 @@ class TestFactsApi(PatchSSHTestCase):
 
         assert fact_data == {host_1: "some-output"}
         fake_run_command.assert_called_with(
-            Arch.command,
+            Arch().command(),
             print_input=False,
             print_output=False,
             **defaults,
@@ -309,7 +309,7 @@ class TestHostFactsApi(PatchSSHTestCase):
 
         assert fact_data == "some-output"
         fake_run_command.assert_called_with(
-            Arch.command,
+            Arch().command(),
             print_input=False,
             print_output=False,
             **defaults,

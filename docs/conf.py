@@ -42,9 +42,11 @@ html_theme_options = {
     "docsearch_index_name": "pyinfra",
     "plausible_domain": "docs.pyinfra.com",
     "plausible_stats_domain": "stats.oxygem.com",
-    "doc_versions": ["2.x", "1.x", "0.x", "latest"],
-    "primary_doc_version": "2.x",
+    "doc_versions": ["3.x", "2.x", "1.x", "0.x", "latest"],
+    "primary_doc_version": "3.x",
 }
+
+myst_heading_anchors = 3
 
 templates_path = ["templates"]
 

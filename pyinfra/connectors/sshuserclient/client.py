@@ -124,7 +124,7 @@ class SSHClient(ParamikoClient):
     original idea at http://bitprophet.org/blog/2012/11/05/gateway-solutions/.
     """
 
-    def connect(
+    def connect(  # type: ignore[override]
         self,
         hostname,
         _pyinfra_ssh_forward_agent=None,

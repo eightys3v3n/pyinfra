@@ -11,7 +11,6 @@ class OpenrcStatus(FactBase):
     """
 
     default = dict
-    requires_command = "rc-status"
     regex = (
         r"\s+([a-zA-Z0-9\-_]+)"
         r"\s+\[\s+"
@@ -20,6 +19,9 @@ class OpenrcStatus(FactBase):
         r"[0-9]+\:[0-9]+\:[0-9]+\s\([0-9]+\))?"
         r"\s+\]"
     )
+
+    def requires_command(self, runlevel="default") -> str:
+        return "rc-status"
 
     def command(self, runlevel="default"):
         return "rc-status {0}".format(runlevel)
@@ -41,7 +43,9 @@ class OpenrcEnabled(FactBase):
     """
 
     default = dict
-    requires_command = "rc-update"
+
+    def requires_command(self, runlevel="default") -> str:
+        return "rc-update"
 
     def command(self, runlevel="default"):
         self.runlevel = runlevel

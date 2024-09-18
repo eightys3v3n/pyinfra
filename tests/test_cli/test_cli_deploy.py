@@ -33,10 +33,14 @@ class TestCliDeployState(PatchSSHTestCase):
             assert list(op_meta.names)[0] == correct_op_name
 
             for host in state.inventory:
+                executed = False
+                host_op = state.ops[host].get(op_hash)
+                if host_op:
+                    executed = host_op.operation_meta.executed
                 if correct_host_names is True or host.name in correct_host_names:
-                    self.assertIn(op_hash, host.op_hash_order)
+                    assert executed is True
                 else:
-                    self.assertNotIn(op_hash, host.op_hash_order)
+                    assert executed is False
 
     def test_deploy(self):
         task_file_path = path.join("tasks", "a_task.py")
@@ -72,6 +76,7 @@ class TestCliDeployState(PatchSSHTestCase):
             ("Nested order loop 2/1", ("somehost", "anotherhost")),
             ("Nested order loop 2/2", ("somehost", "anotherhost")),
             ("Final limited operation", ("somehost",)),
+            ("Second final limited operation", ("anotherhost", "someotherhost")),
         ]
 
         # Run 3 iterations of the test - each time shuffling the order of the

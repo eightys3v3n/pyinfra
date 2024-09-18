@@ -4,6 +4,8 @@ Manage systemd services.
 
 from __future__ import annotations
 
+import shlex
+
 from pyinfra import host
 from pyinfra.api import StringCommand, operation
 from pyinfra.facts.systemd import SystemdEnabled, SystemdStatus, _make_systemctl_cmd
@@ -140,8 +142,8 @@ def service(
 
         # Isn't enabled and want enabled?
         if not is_enabled and enabled is True:
-            yield "{0} enable {1}".format(systemctl_cmd, service)
+            yield "{0} enable {1}".format(systemctl_cmd, shlex.quote(service))
 
         # Is enabled and want disabled?
         elif is_enabled and enabled is False:
-            yield "{0} disable {1}".format(systemctl_cmd, service)
+            yield "{0} disable {1}".format(systemctl_cmd, shlex.quote(service))

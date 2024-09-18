@@ -5,10 +5,6 @@
 </p>
 
 <p>
-    <strong>Note: this is the v3 branch, which is currently in beta. <a href="https://docs.pyinfra.com/en/next">See the docs for v3</a>. If needed the <a href="https://github.com/pyinfra-dev/pyinfra/tree/2.x/">2.x branch is here</a>, but is in bugfix only mode.</strong>
-</p>
-
-<p>
     pyinfra turns Python code into shell commands and runs them on your servers. Execute ad-hoc commands and write declarative operations. Target SSH servers, local machine and Docker containers. Fast and scales from one server to thousands. Think <code>ansible</code> but Python instead of YAML, and a lot faster.
 </p>
 

@@ -184,7 +184,7 @@ def worktree(
     + from_remote_branch: a 2-tuple ``(remote, branch)`` that identifies a remote branch
     + present: whether the working tree should exist
     + assume_repo_exists: whether to assume the main repo exists
-    + force: remove unclean working tree if should not exist
+    + force: whether to use ``--force`` when adding/removing worktrees
     + user: chown files to this user after
     + group: chown files to this group after
 
@@ -203,6 +203,14 @@ def worktree(
             repo="/usr/local/src/pyinfra/master",
             worktree="/usr/local/src/pyinfra/hotfix",
             commitish="4e091aa0"
+        )
+
+        git.worktree(
+            name="Create a worktree from the tag `4e091aa0`, even if already registered",
+            repo="/usr/local/src/pyinfra/master",
+            worktree="/usr/local/src/pyinfra/2.x",
+            commitish="2.x",
+            force=True
         )
 
         git.worktree(
@@ -251,6 +259,15 @@ def worktree(
         )
 
         git.worktree(
+            name="Idempotent worktree creation, never pulls",
+            repo="/usr/local/src/pyinfra/master",
+            worktree="/usr/local/src/pyinfra/hotfix",
+            new_branch="v1.0",
+            commitish="v1.0",
+            pull=False
+        )
+
+        git.worktree(
             name="Pull an existing worktree already linked to a tracking branch",
             repo="/usr/local/src/pyinfra/master",
             worktree="/usr/local/src/pyinfra/hotfix"
@@ -295,6 +312,9 @@ def worktree(
         elif detached:
             command_parts.append("--detach")
 
+        if force:
+            command_parts.append("--force")
+
         command_parts.append(worktree)
 
         if commitish:
@@ -317,9 +337,12 @@ def worktree(
 
     # It exists and we still want it => pull/rebase it
     elif host.get_fact(Directory, path=worktree) and present:
+        if not pull:
+            host.noop("Pull is disabled")
+
         # pull the worktree only if it's already linked to a tracking branch or
         # if a remote branch is set
-        if host.get_fact(GitTrackingBranch, repo=worktree) or from_remote_branch:
+        elif host.get_fact(GitTrackingBranch, repo=worktree) or from_remote_branch:
             command = "cd {0} && git pull".format(worktree)
 
             if rebase:

@@ -18,10 +18,12 @@ class RunitStatus(FactBase):
         }
     """
 
-    requires_command = "sv"
     default = dict
 
-    def command(self, service=None, svdir="/var/service"):
+    def requires_command(self, *args, **kwargs) -> str:
+        return "sv"
+
+    def command(self, service=None, svdir="/var/service") -> str:
         if service is None:
             return (
                 'export SVDIR="{0}" && '

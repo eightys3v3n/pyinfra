@@ -5,7 +5,7 @@ set -euo pipefail
 # Generates /en/next
 NEXT_BRANCH="3.x"
 # Generates /en/latest AND redirects /page -> /en/$NAME
-LATEST_BRANCH="2.x"
+LATEST_BRANCH="3.x"
 
 
 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
@@ -24,7 +24,7 @@ if [ "${BRANCH_NAME}" = "${LATEST_BRANCH}" ]; then
     env DOCS_VERSION=latest sphinx-build -a docs/ docs/public/en/latest/
 fi
 
-if [ -n "${TAG_NAME}" ] && [[ "$TAG_NAME" =~ ^v[0-9]\.[0-9]+(\.[a-z0-9]+)?$ ]]; then
+if [ -n "${TAG_NAME}" ] && [[ "$TAG_NAME" =~ ^v[0-9]\.[0-9]+([\.a-z0-9]+)?$ ]]; then
     echo "Building ${BRANCH_NAME} docs for tag: ${TAG_NAME}"
     env DOCS_VERSION=$BRANCH_NAME sphinx-build -a docs/ docs/public/en/$BRANCH_NAME/
 
